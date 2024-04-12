@@ -195,11 +195,13 @@ def _convert_hl(rgb_data, bg_color):
     w = rgb_data.shape[1]
     hl = []
     code = []
+    hl.append("local M = {} \nM.setup = function()\n")
     for i in range(h):
         generated = [_generate_hl(rgb_data, i, j, bg_color) for j in range(w)]
         hl.extend([item[0] for item in generated if item[0]])
         code.append("{ %s }," % ("".join([item[1] for item in generated])))
-    code = "dashboard.section.header.opts.hl = {\n %s \n}" % ("\n".join(code))
+    hl.append("\nend\n")
+    code = "M.hl = {\n %s \n}" % ("\n".join(code))
     hl.append(code)
     return hl
 
@@ -237,7 +239,7 @@ def _save(raw_data: List[List[str]], path: str):
 
 
 def _convert_to_lua_fmt(data: List[str]):
-    return [f"[[ {d} ]]," for d in data]
+    return [f"return{{\nheader ={{\n"] +[f"[[ {d} ]]," for d in data]+[f"\n}},\nM=M\n}}"]
 
 
 def _qunat(img, k: int):
