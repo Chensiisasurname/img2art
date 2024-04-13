@@ -239,7 +239,7 @@ def _save(raw_data: List[List[str]], path: str):
 
 
 def _convert_to_lua_fmt(data: List[str]):
-    return [f"return{{\nheader ={{\n"] +[f"[[ {d} ]]," for d in data]+[f"\n}},\nM=M\n}}"]
+    return [f"return{{\nheader ={{\n"] +[f"[[{d}]]," for d in data]+[f"\n}},\nM=M\n}}"]
 
 
 def _qunat(img, k: int):
